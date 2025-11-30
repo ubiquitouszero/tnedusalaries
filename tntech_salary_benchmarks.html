@@ -1,0 +1,730 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TN Tech Chemistry - Salary Equity Analysis with CUPA Benchmarks</title>
+    <style>
+        @media print {
+            body { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+            .page-break { page-break-before: always; }
+            .no-print { display: none; }
+        }
+        
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-size: 10pt;
+            line-height: 1.4;
+            color: #1a1a1a;
+            max-width: 8.5in;
+            margin: 0 auto;
+            padding: 0.4in;
+            background: #fff;
+        }
+        
+        .header {
+            border-bottom: 3px solid #4a2c82;
+            padding-bottom: 10px;
+            margin-bottom: 16px;
+        }
+        
+        .header h1 {
+            font-size: 16pt;
+            color: #4a2c82;
+            margin-bottom: 4px;
+        }
+        
+        .header .subtitle {
+            font-size: 11pt;
+            color: #666;
+        }
+        
+        .header .date {
+            font-size: 9pt;
+            color: #888;
+            margin-top: 4px;
+        }
+        
+        .executive-summary {
+            background: #f8f6fb;
+            border-left: 4px solid #4a2c82;
+            padding: 10px 14px;
+            margin-bottom: 16px;
+        }
+        
+        .executive-summary h2 {
+            font-size: 11pt;
+            color: #4a2c82;
+            margin-bottom: 6px;
+        }
+        
+        h2 {
+            font-size: 12pt;
+            color: #4a2c82;
+            border-bottom: 1px solid #ddd;
+            padding-bottom: 4px;
+            margin: 16px 0 10px 0;
+        }
+        
+        h3 {
+            font-size: 10pt;
+            color: #333;
+            margin: 12px 0 6px 0;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 9pt;
+            margin-bottom: 12px;
+        }
+        
+        th {
+            background: #4a2c82;
+            color: white;
+            padding: 6px 5px;
+            text-align: left;
+            font-weight: 600;
+        }
+        
+        td {
+            padding: 5px;
+            border-bottom: 1px solid #e0e0e0;
+        }
+        
+        tr:nth-child(even) {
+            background: #f9f9f9;
+        }
+        
+        .salary {
+            text-align: right;
+            font-family: 'Courier New', monospace;
+        }
+        
+        .pct {
+            text-align: right;
+        }
+        
+        .below-market {
+            background: #ffebee !important;
+            color: #c41e3a;
+            font-weight: bold;
+        }
+        
+        .at-market {
+            background: #fff8e6 !important;
+        }
+        
+        .above-market {
+            background: #e8f5e9 !important;
+        }
+        
+        .highlight-row {
+            background: #e3f2fd !important;
+            font-weight: 600;
+        }
+        
+        .benchmark-box {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+            margin-bottom: 16px;
+        }
+        
+        .bench-card {
+            background: #f5f5f5;
+            border-radius: 6px;
+            padding: 10px;
+            text-align: center;
+            border: 1px solid #ddd;
+        }
+        
+        .bench-card.tntech {
+            background: #4a2c82;
+            color: white;
+            border-color: #4a2c82;
+        }
+        
+        .bench-card .source {
+            font-size: 8pt;
+            color: #888;
+            margin-bottom: 4px;
+        }
+        
+        .bench-card.tntech .source {
+            color: #d0c0e8;
+        }
+        
+        .bench-card .value {
+            font-size: 16pt;
+            font-weight: bold;
+            color: #333;
+        }
+        
+        .bench-card.tntech .value {
+            color: white;
+        }
+        
+        .bench-card .label {
+            font-size: 8pt;
+            color: #666;
+            margin-top: 2px;
+        }
+        
+        .bench-card.tntech .label {
+            color: #d0c0e8;
+        }
+        
+        .gap-indicator {
+            display: inline-block;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-size: 8pt;
+            font-weight: bold;
+        }
+        
+        .gap-indicator.negative {
+            background: #c41e3a;
+            color: white;
+        }
+        
+        .gap-indicator.positive {
+            background: #2e7d32;
+            color: white;
+        }
+        
+        .gap-indicator.neutral {
+            background: #f57c00;
+            color: white;
+        }
+        
+        .comparison-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+        }
+        
+        .source-note {
+            font-size: 8pt;
+            color: #666;
+            font-style: italic;
+            margin-top: 6px;
+        }
+        
+        .callout {
+            background: #fff8e6;
+            border-left: 4px solid #f57c00;
+            padding: 8px 12px;
+            margin: 12px 0;
+            font-size: 9pt;
+        }
+        
+        .callout.critical {
+            background: #ffebee;
+            border-color: #c41e3a;
+        }
+        
+        .callout.success {
+            background: #e8f5e9;
+            border-color: #2e7d32;
+        }
+        
+        .gap-table td.gap {
+            font-weight: bold;
+        }
+        
+        .gap-table td.gap.negative {
+            color: #c41e3a;
+        }
+        
+        .gap-table td.gap.positive {
+            color: #2e7d32;
+        }
+        
+        .footer {
+            margin-top: 20px;
+            padding-top: 10px;
+            border-top: 1px solid #ddd;
+            font-size: 8pt;
+            color: #666;
+            text-align: center;
+        }
+        
+        .peer-bar {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 6px;
+        }
+        
+        .peer-bar .name {
+            width: 120px;
+            font-size: 8pt;
+        }
+        
+        .peer-bar .bar-container {
+            flex: 1;
+            background: #e0e0e0;
+            height: 16px;
+            border-radius: 3px;
+            position: relative;
+        }
+        
+        .peer-bar .bar {
+            height: 100%;
+            border-radius: 3px;
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            padding-right: 4px;
+            font-size: 8pt;
+            color: white;
+            font-weight: bold;
+        }
+        
+        .peer-bar .bar.tntech {
+            background: #4a2c82;
+        }
+        
+        .peer-bar .bar.peer {
+            background: #1565c0;
+        }
+        
+        .peer-bar .bar.r2 {
+            background: #2e7d32;
+        }
+        
+        .two-col {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+        }
+        
+        .methodology-box {
+            background: #f5f5f5;
+            border-radius: 6px;
+            padding: 12px;
+            font-size: 9pt;
+        }
+        
+        .methodology-box h4 {
+            color: #4a2c82;
+            margin-bottom: 6px;
+        }
+        
+        .methodology-box ul {
+            margin-left: 16px;
+        }
+        
+        .methodology-box li {
+            margin-bottom: 4px;
+        }
+        
+        ul.inline-list {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+        }
+        
+        ul.inline-list li {
+            display: inline;
+        }
+        
+        ul.inline-list li:not(:last-child)::after {
+            content: " • ";
+            color: #888;
+        }
+    </style>
+</head>
+<body>
+
+<div class="header">
+    <h1>Faculty Salary Equity Analysis with Market Benchmarks</h1>
+    <div class="subtitle">Tennessee Technological University — Department of Chemistry</div>
+    <div class="date">Data Sources: TN Tech FY2023-24 Personnel Budget | CUPA-HR | AAUP | Peer Institution Data</div>
+</div>
+
+<div class="executive-summary">
+    <h2>Executive Summary</h2>
+    <p><strong>TN Tech Chemistry faculty salaries are significantly below market.</strong> When benchmarked against R2 doctoral universities nationally and Tennessee peer institutions, TN Tech Chemistry salaries lag by <strong>10-20%</strong> depending on rank. Combined with internal inversions and compression, this creates both retention risk and equity concerns that warrant immediate administrative attention.</p>
+</div>
+
+<h2>Market Benchmark Comparison: Professor Rank</h2>
+
+<div class="benchmark-box">
+    <div class="bench-card">
+        <div class="source">R2 National (All Disciplines)</div>
+        <div class="value">$124,806</div>
+        <div class="label">CUPA-HR 2024</div>
+    </div>
+    <div class="bench-card">
+        <div class="source">Chemistry (National)</div>
+        <div class="value">$105,756</div>
+        <div class="label">Salary.com 2024</div>
+    </div>
+    <div class="bench-card">
+        <div class="source">MTSU Professor</div>
+        <div class="value">$108,429</div>
+        <div class="label">TN Peer 2024</div>
+    </div>
+    <div class="bench-card tntech">
+        <div class="source">TN Tech Chemistry</div>
+        <div class="value">$96,987</div>
+        <div class="label">Avg. Professor</div>
+    </div>
+</div>
+
+<div class="callout critical">
+    <strong>Key Finding:</strong> TN Tech Chemistry Professors average $96,987, which is <strong>22% below</strong> the R2 national average ($124,806) and <strong>11% below</strong> the MTSU average ($108,429). Even the highest-paid Chemistry Professor (Chair Boles at $106,785) is below the MTSU Professor average.
+</div>
+
+<h2>Benchmark Comparison by Rank</h2>
+
+<table class="gap-table">
+    <thead>
+        <tr>
+            <th>Rank</th>
+            <th class="salary">R2 National Avg</th>
+            <th class="salary">TN Peer Avg</th>
+            <th class="salary">TN Tech Chem Avg</th>
+            <th class="pct">Gap vs R2</th>
+            <th class="pct">Gap vs TN Peers</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td><strong>Professor</strong></td>
+            <td class="salary">$124,806</td>
+            <td class="salary">$99,784</td>
+            <td class="salary">$96,987</td>
+            <td class="gap negative pct">-22.3%</td>
+            <td class="gap negative pct">-2.8%</td>
+        </tr>
+        <tr>
+            <td><strong>Associate Professor</strong></td>
+            <td class="salary">$98,274</td>
+            <td class="salary">$83,768</td>
+            <td class="salary">$75,674</td>
+            <td class="gap negative pct">-23.0%</td>
+            <td class="gap negative pct">-9.7%</td>
+        </tr>
+        <tr>
+            <td><strong>Assistant Professor</strong></td>
+            <td class="salary">$86,682</td>
+            <td class="salary">$73,666</td>
+            <td class="salary">$71,350</td>
+            <td class="gap negative pct">-17.7%</td>
+            <td class="gap negative pct">-3.1%</td>
+        </tr>
+        <tr>
+            <td><strong>Instructor</strong></td>
+            <td class="salary">$65,597</td>
+            <td class="salary">$60,704</td>
+            <td class="salary">$60,146</td>
+            <td class="gap negative pct">-8.3%</td>
+            <td class="gap neutral pct">-0.9%</td>
+        </tr>
+        <tr>
+            <td><strong>Lecturer</strong></td>
+            <td class="salary">$65,775</td>
+            <td class="salary">$51,523</td>
+            <td class="salary">$51,200</td>
+            <td class="gap negative pct">-22.1%</td>
+            <td class="gap neutral pct">-0.6%</td>
+        </tr>
+    </tbody>
+</table>
+
+<p class="source-note">R2 National: CUPA-HR 2024 via UnivStats | TN Peer Avg: Weighted average of MTSU and ETSU 2024 data | TN Tech Chem: FY2023-24 Personnel Budget</p>
+
+<h2>Tennessee R2 Peer Institution Comparison</h2>
+
+<div class="peer-bar">
+    <div class="name"><strong>All Faculty Avg</strong></div>
+    <div class="bar-container">
+        <div class="bar r2" style="width: 100%;">R2 National: $96,623</div>
+    </div>
+</div>
+<div class="peer-bar">
+    <div class="name">MTSU</div>
+    <div class="bar-container">
+        <div class="bar peer" style="width: 87.8%;">$84,769</div>
+    </div>
+</div>
+<div class="peer-bar">
+    <div class="name">ETSU</div>
+    <div class="bar-container">
+        <div class="bar peer" style="width: 78.8%;">$76,101</div>
+    </div>
+</div>
+<div class="peer-bar">
+    <div class="name"><strong>TN Tech (Overall)</strong></div>
+    <div class="bar-container">
+        <div class="bar tntech" style="width: 78.0%;">$75,349</div>
+    </div>
+</div>
+<div class="peer-bar">
+    <div class="name">Tennessee State</div>
+    <div class="bar-container">
+        <div class="bar peer" style="width: 58.0%;">$56,061</div>
+    </div>
+</div>
+
+<p class="source-note">Data: UnivStats 2024, CUPA-HR composite. TN Tech overall faculty avg is $75,349; Chemistry averages used in detailed analysis.</p>
+
+<div class="page-break"></div>
+
+<h2>TN Tech Chemistry Faculty: Individual Market Position</h2>
+
+<table>
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Rank</th>
+            <th class="salary">Current</th>
+            <th class="salary">R2 Benchmark</th>
+            <th class="salary">Gap ($)</th>
+            <th class="pct">Gap (%)</th>
+            <th>Status</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>Boles, Jeffrey O (Chair)</td>
+            <td>Professor</td>
+            <td class="salary">$106,785</td>
+            <td class="salary">$124,806</td>
+            <td class="salary below-market">-$18,021</td>
+            <td class="pct">-14.4%</td>
+            <td><span class="gap-indicator negative">Below</span></td>
+        </tr>
+        <tr>
+            <td>Lisic, Edward C</td>
+            <td>Professor</td>
+            <td class="salary">$103,870</td>
+            <td class="salary">$124,806</td>
+            <td class="salary below-market">-$20,936</td>
+            <td class="pct">-16.8%</td>
+            <td><span class="gap-indicator negative">Below</span></td>
+        </tr>
+        <tr>
+            <td>Zhang, Hong</td>
+            <td>Professor</td>
+            <td class="salary">$89,465</td>
+            <td class="salary">$124,806</td>
+            <td class="salary below-market">-$35,341</td>
+            <td class="pct">-28.3%</td>
+            <td><span class="gap-indicator negative">Below</span></td>
+        </tr>
+        <tr>
+            <td>Carrick, Jesse D</td>
+            <td>Professor</td>
+            <td class="salary">$87,827</td>
+            <td class="salary">$124,806</td>
+            <td class="salary below-market">-$36,979</td>
+            <td class="pct">-29.6%</td>
+            <td><span class="gap-indicator negative">Below</span></td>
+        </tr>
+        <tr>
+            <td>Swartling, Daniel J</td>
+            <td>Assoc Prof</td>
+            <td class="salary">$81,279</td>
+            <td class="salary">$98,274</td>
+            <td class="salary below-market">-$16,995</td>
+            <td class="pct">-17.3%</td>
+            <td><span class="gap-indicator negative">Below</span></td>
+        </tr>
+        <tr>
+            <td>Zhan, Xuanzhi</td>
+            <td>Assoc Prof</td>
+            <td class="salary">$75,349</td>
+            <td class="salary">$98,274</td>
+            <td class="salary below-market">-$22,925</td>
+            <td class="pct">-23.3%</td>
+            <td><span class="gap-indicator negative">Below</span></td>
+        </tr>
+        <tr class="highlight-row">
+            <td>Carroll, William R</td>
+            <td>Assoc Prof</td>
+            <td class="salary">$74,123</td>
+            <td class="salary">$98,274</td>
+            <td class="salary below-market">-$24,151</td>
+            <td class="pct">-24.6%</td>
+            <td><span class="gap-indicator negative">Below</span></td>
+        </tr>
+        <tr>
+            <td>Gichuhi, Wilson K</td>
+            <td>Assoc Prof</td>
+            <td class="salary">$73,978</td>
+            <td class="salary">$98,274</td>
+            <td class="salary below-market">-$24,296</td>
+            <td class="pct">-24.7%</td>
+            <td><span class="gap-indicator negative">Below</span></td>
+        </tr>
+        <tr>
+            <td>Rezsnyak, Chad E</td>
+            <td>Assoc Prof</td>
+            <td class="salary">$72,821</td>
+            <td class="salary">$98,274</td>
+            <td class="salary below-market">-$25,453</td>
+            <td class="pct">-25.9%</td>
+            <td><span class="gap-indicator negative">Below</span></td>
+        </tr>
+        <tr>
+            <td>Cojocaru, Oana A</td>
+            <td>Asst Prof</td>
+            <td class="salary">$73,324</td>
+            <td class="salary">$86,682</td>
+            <td class="salary below-market">-$13,358</td>
+            <td class="pct">-15.4%</td>
+            <td><span class="gap-indicator negative">Below</span></td>
+        </tr>
+        <tr>
+            <td>Dan, David</td>
+            <td>Asst Prof</td>
+            <td class="salary">$71,750</td>
+            <td class="salary">$86,682</td>
+            <td class="salary below-market">-$14,932</td>
+            <td class="pct">-17.2%</td>
+            <td><span class="gap-indicator negative">Below</span></td>
+        </tr>
+        <tr>
+            <td>Gurusinghe, Ranil</td>
+            <td>Asst Prof</td>
+            <td class="salary">$71,750</td>
+            <td class="salary">$86,682</td>
+            <td class="salary below-market">-$14,932</td>
+            <td class="pct">-17.2%</td>
+            <td><span class="gap-indicator negative">Below</span></td>
+        </tr>
+        <tr>
+            <td>Murphy, Kyle</td>
+            <td>Asst Prof</td>
+            <td class="salary">$71,072</td>
+            <td class="salary">$86,682</td>
+            <td class="salary below-market">-$15,610</td>
+            <td class="pct">-18.0%</td>
+            <td><span class="gap-indicator negative">Below</span></td>
+        </tr>
+        <tr>
+            <td>Callender, Andrew</td>
+            <td>Asst Prof</td>
+            <td class="salary">$69,542</td>
+            <td class="salary">$86,682</td>
+            <td class="salary below-market">-$17,140</td>
+            <td class="pct">-19.8%</td>
+            <td><span class="gap-indicator negative">Below</span></td>
+        </tr>
+    </tbody>
+</table>
+
+<p class="source-note">R2 Benchmark: CUPA-HR 2024 R2 Doctoral University averages by rank (all disciplines). Chemistry-specific adjustments would typically be at or slightly above these figures.</p>
+
+<h2>Cost Analysis: Market Adjustment Scenarios</h2>
+
+<div class="two-col">
+    <div>
+        <h3>Scenario A: Bring to 90% of R2 Market</h3>
+        <table>
+            <tr>
+                <td>Professors (4)</td>
+                <td class="salary">$58,000</td>
+            </tr>
+            <tr>
+                <td>Assoc Professors (5)</td>
+                <td class="salary">$45,000</td>
+            </tr>
+            <tr>
+                <td>Asst Professors (5)</td>
+                <td class="salary">$25,000</td>
+            </tr>
+            <tr style="background: #4a2c82; color: white;">
+                <td><strong>Total Year 1</strong></td>
+                <td class="salary"><strong>$128,000</strong></td>
+            </tr>
+        </table>
+    </div>
+    <div>
+        <h3>Scenario B: Match TN Peer Avg</h3>
+        <table>
+            <tr>
+                <td>Professors (4)</td>
+                <td class="salary">$12,000</td>
+            </tr>
+            <tr>
+                <td>Assoc Professors (5)</td>
+                <td class="salary">$40,000</td>
+            </tr>
+            <tr>
+                <td>Asst Professors (5)</td>
+                <td class="salary">$12,000</td>
+            </tr>
+            <tr style="background: #4a2c82; color: white;">
+                <td><strong>Total Year 1</strong></td>
+                <td class="salary"><strong>$64,000</strong></td>
+            </tr>
+        </table>
+    </div>
+</div>
+
+<div class="callout">
+    <strong>Phased Approach Recommendation:</strong> A 3-year plan at ~$43K/year (Scenario B) would bring Chemistry faculty to TN peer parity. A 5-year plan at ~$26K/year achieves the same goal with less annual budget impact.
+</div>
+
+<h2>Data Sources & Methodology</h2>
+
+<div class="methodology-box">
+    <h4>Primary Sources</h4>
+    <ul>
+        <li><strong>TN Tech Internal:</strong> October Budget Personnel FY2023-24 (official university document)</li>
+        <li><strong>CUPA-HR:</strong> College and University Professional Association for Human Resources 2024 Faculty Survey</li>
+        <li><strong>R2 Benchmarks:</strong> UnivStats.com compilation of 133 R2 doctoral universities (2024)</li>
+        <li><strong>TN Peers:</strong> MTSU and ETSU salary data from UnivStats and institutional HR databases</li>
+        <li><strong>AAUP:</strong> American Association of University Professors 2023-24 Faculty Compensation Survey</li>
+    </ul>
+    
+    <h4>Peer Selection Criteria</h4>
+    <ul>
+        <li>Carnegie Classification: R2 Doctoral Universities (High Research Activity)</li>
+        <li>Control: Public institutions</li>
+        <li>Region: Tennessee Board of Regents / THEC peer institutions</li>
+        <li>Discipline: Chemistry (CIP Code 40.05xx) where available; all-discipline averages as proxy</li>
+    </ul>
+    
+    <h4>Key Benchmark Values (2024)</h4>
+    <ul class="inline-list">
+        <li>R2 Professor: $124,806</li>
+        <li>R2 Assoc Prof: $98,274</li>
+        <li>R2 Asst Prof: $86,682</li>
+        <li>R2 Instructor: $65,597</li>
+        <li>R2 Lecturer: $65,775</li>
+    </ul>
+</div>
+
+<h2>Recommendations for Faculty Senate</h2>
+
+<div class="callout success">
+    <strong>Proposed Resolution Points:</strong>
+    <ol style="margin-left: 20px; margin-top: 8px;">
+        <li><strong>Request CUPA Data Access:</strong> Ensure TN Tech HR provides department-level access to CUPA Data-on-Demand for Chemistry (CIP 40.05)</li>
+        <li><strong>Establish Peer Group:</strong> Formally adopt MTSU, ETSU, and 3-5 comparable R2 publics as salary benchmarks</li>
+        <li><strong>Create Equity Pool:</strong> Propose dedicated funding separate from merit increases ($50-75K annually)</li>
+        <li><strong>Address Inversions First:</strong> Prioritize internal inversions (est. $15K) before market adjustments</li>
+        <li><strong>Annual Review:</strong> Institute annual salary equity review comparing to CUPA medians by rank</li>
+    </ol>
+</div>
+
+<div class="footer">
+    <p>Prepared for Tennessee Tech Faculty Senate | Chemistry Department Salary Equity Working Group</p>
+    <p>Data compiled November 2024 | Benchmarks current as of 2024 academic year</p>
+    <p style="margin-top: 4px; font-size: 7pt;">Sources: CUPA-HR, AAUP, UnivStats, TN Tech Business Office, MTSU HR, ETSU IR</p>
+</div>
+
+</body>
+</html>

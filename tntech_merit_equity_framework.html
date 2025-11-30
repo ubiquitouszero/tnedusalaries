@@ -1,0 +1,836 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TN Tech Chemistry - Salary Equity Analysis with Merit Framework</title>
+    <style>
+        @media print {
+            body { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+            .page-break { page-break-before: always; }
+            .no-print { display: none; }
+        }
+        
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-size: 10pt;
+            line-height: 1.4;
+            color: #1a1a1a;
+            max-width: 8.5in;
+            margin: 0 auto;
+            padding: 0.4in;
+            background: #fff;
+        }
+        
+        .header {
+            border-bottom: 3px solid #4a2c82;
+            padding-bottom: 10px;
+            margin-bottom: 16px;
+        }
+        
+        .header h1 {
+            font-size: 16pt;
+            color: #4a2c82;
+            margin-bottom: 4px;
+        }
+        
+        .header .subtitle {
+            font-size: 11pt;
+            color: #666;
+        }
+        
+        .header .date {
+            font-size: 9pt;
+            color: #888;
+            margin-top: 4px;
+        }
+        
+        .executive-summary {
+            background: #f8f6fb;
+            border-left: 4px solid #4a2c82;
+            padding: 10px 14px;
+            margin-bottom: 16px;
+        }
+        
+        .executive-summary h2 {
+            font-size: 11pt;
+            color: #4a2c82;
+            margin-bottom: 6px;
+        }
+        
+        h2 {
+            font-size: 12pt;
+            color: #4a2c82;
+            border-bottom: 1px solid #ddd;
+            padding-bottom: 4px;
+            margin: 16px 0 10px 0;
+        }
+        
+        h3 {
+            font-size: 10pt;
+            color: #333;
+            margin: 12px 0 6px 0;
+        }
+        
+        h4 {
+            font-size: 9pt;
+            color: #4a2c82;
+            margin: 8px 0 4px 0;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 9pt;
+            margin-bottom: 12px;
+        }
+        
+        th {
+            background: #4a2c82;
+            color: white;
+            padding: 6px 5px;
+            text-align: left;
+            font-weight: 600;
+        }
+        
+        td {
+            padding: 5px;
+            border-bottom: 1px solid #e0e0e0;
+        }
+        
+        tr:nth-child(even) {
+            background: #f9f9f9;
+        }
+        
+        .salary {
+            text-align: right;
+            font-family: 'Courier New', monospace;
+        }
+        
+        .pct {
+            text-align: right;
+        }
+        
+        .center {
+            text-align: center;
+        }
+        
+        .below-market {
+            background: #ffebee !important;
+            color: #c41e3a;
+            font-weight: bold;
+        }
+        
+        .at-market {
+            background: #fff8e6 !important;
+        }
+        
+        .above-market {
+            background: #e8f5e9 !important;
+        }
+        
+        .highlight-row {
+            background: #e3f2fd !important;
+            font-weight: 600;
+        }
+        
+        .benchmark-box {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+            margin-bottom: 16px;
+        }
+        
+        .bench-card {
+            background: #f5f5f5;
+            border-radius: 6px;
+            padding: 10px;
+            text-align: center;
+            border: 1px solid #ddd;
+        }
+        
+        .bench-card.tntech {
+            background: #4a2c82;
+            color: white;
+            border-color: #4a2c82;
+        }
+        
+        .bench-card .source {
+            font-size: 8pt;
+            color: #888;
+            margin-bottom: 4px;
+        }
+        
+        .bench-card.tntech .source {
+            color: #d0c0e8;
+        }
+        
+        .bench-card .value {
+            font-size: 16pt;
+            font-weight: bold;
+            color: #333;
+        }
+        
+        .bench-card.tntech .value {
+            color: white;
+        }
+        
+        .bench-card .label {
+            font-size: 8pt;
+            color: #666;
+            margin-top: 2px;
+        }
+        
+        .bench-card.tntech .label {
+            color: #d0c0e8;
+        }
+        
+        .gap-indicator {
+            display: inline-block;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-size: 8pt;
+            font-weight: bold;
+        }
+        
+        .gap-indicator.negative {
+            background: #c41e3a;
+            color: white;
+        }
+        
+        .gap-indicator.positive {
+            background: #2e7d32;
+            color: white;
+        }
+        
+        .gap-indicator.neutral {
+            background: #f57c00;
+            color: white;
+        }
+        
+        .source-note {
+            font-size: 8pt;
+            color: #666;
+            font-style: italic;
+            margin-top: 6px;
+        }
+        
+        .callout {
+            background: #fff8e6;
+            border-left: 4px solid #f57c00;
+            padding: 8px 12px;
+            margin: 12px 0;
+            font-size: 9pt;
+        }
+        
+        .callout.critical {
+            background: #ffebee;
+            border-color: #c41e3a;
+        }
+        
+        .callout.success {
+            background: #e8f5e9;
+            border-color: #2e7d32;
+        }
+        
+        .callout.info {
+            background: #e3f2fd;
+            border-color: #1565c0;
+        }
+        
+        .gap-table td.gap {
+            font-weight: bold;
+        }
+        
+        .gap-table td.gap.negative {
+            color: #c41e3a;
+        }
+        
+        .gap-table td.gap.positive {
+            color: #2e7d32;
+        }
+        
+        .footer {
+            margin-top: 20px;
+            padding-top: 10px;
+            border-top: 1px solid #ddd;
+            font-size: 8pt;
+            color: #666;
+            text-align: center;
+        }
+        
+        .two-col {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+        }
+        
+        .three-col {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 12px;
+        }
+        
+        .methodology-box {
+            background: #f5f5f5;
+            border-radius: 6px;
+            padding: 12px;
+            font-size: 9pt;
+        }
+        
+        .methodology-box h4 {
+            color: #4a2c82;
+            margin-bottom: 6px;
+        }
+        
+        .methodology-box ul {
+            margin-left: 16px;
+        }
+        
+        .methodology-box li {
+            margin-bottom: 4px;
+        }
+        
+        .merit-card {
+            background: white;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            padding: 10px;
+        }
+        
+        .merit-card h4 {
+            margin-top: 0;
+            border-bottom: 2px solid #4a2c82;
+            padding-bottom: 4px;
+        }
+        
+        .merit-card .weight {
+            background: #4a2c82;
+            color: white;
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-size: 9pt;
+            float: right;
+        }
+        
+        .metric-list {
+            margin: 0;
+            padding-left: 16px;
+            font-size: 9pt;
+        }
+        
+        .metric-list li {
+            margin-bottom: 3px;
+        }
+        
+        .rating-scale {
+            display: flex;
+            gap: 4px;
+            margin-top: 8px;
+        }
+        
+        .rating-scale .rating {
+            flex: 1;
+            text-align: center;
+            padding: 4px;
+            border-radius: 4px;
+            font-size: 8pt;
+        }
+        
+        .rating-scale .rating.exceeds {
+            background: #2e7d32;
+            color: white;
+        }
+        
+        .rating-scale .rating.meets {
+            background: #4caf50;
+            color: white;
+        }
+        
+        .rating-scale .rating.developing {
+            background: #f57c00;
+            color: white;
+        }
+        
+        .rating-scale .rating.unsatisfactory {
+            background: #c41e3a;
+            color: white;
+        }
+        
+        .formula-box {
+            background: #f0f0f0;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            padding: 8px 12px;
+            font-family: 'Courier New', monospace;
+            font-size: 9pt;
+            margin: 8px 0;
+        }
+        
+        .weight-bar {
+            display: flex;
+            height: 24px;
+            border-radius: 4px;
+            overflow: hidden;
+            margin: 8px 0;
+        }
+        
+        .weight-bar .segment {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 8pt;
+            font-weight: bold;
+        }
+        
+        .weight-bar .teaching {
+            background: #1565c0;
+        }
+        
+        .weight-bar .research {
+            background: #2e7d32;
+        }
+        
+        .weight-bar .service {
+            background: #f57c00;
+        }
+    </style>
+</head>
+<body>
+
+<div class="header">
+    <h1>Faculty Salary Equity Analysis with Merit Framework</h1>
+    <div class="subtitle">Tennessee Technological University — Department of Chemistry</div>
+    <div class="date">Data Sources: TN Tech FY2023-24 Personnel Budget | CUPA-HR | AAUP | Peer Institutions | TN Tech Policy 206</div>
+</div>
+
+<div class="executive-summary">
+    <h2>Executive Summary</h2>
+    <p><strong>Merit and market equity are complementary, not competing, goals.</strong> This analysis demonstrates that TN Tech Chemistry faculty are significantly below market rates (10-25% depending on rank) AND proposes a merit-based framework for determining adjustment priority. The recommendation: address gross inversions immediately, then use a merit-weighted formula for market adjustments over 3-5 years.</p>
+</div>
+
+<!-- ============================================== -->
+<!-- PART 1: MARKET BENCHMARKS -->
+<!-- ============================================== -->
+
+<h2>Part 1: Market Position Analysis</h2>
+
+<div class="benchmark-box">
+    <div class="bench-card">
+        <div class="source">R2 National (All Disciplines)</div>
+        <div class="value">$124,806</div>
+        <div class="label">Professor Avg</div>
+    </div>
+    <div class="bench-card">
+        <div class="source">R2 National</div>
+        <div class="value">$98,274</div>
+        <div class="label">Assoc Prof Avg</div>
+    </div>
+    <div class="bench-card">
+        <div class="source">R2 National</div>
+        <div class="value">$86,682</div>
+        <div class="label">Asst Prof Avg</div>
+    </div>
+    <div class="bench-card tntech">
+        <div class="source">TN Tech Chemistry</div>
+        <div class="value">-20%</div>
+        <div class="label">Avg Gap to Market</div>
+    </div>
+</div>
+
+<table class="gap-table">
+    <thead>
+        <tr>
+            <th>Rank</th>
+            <th class="salary">R2 National</th>
+            <th class="salary">TN Peer Avg</th>
+            <th class="salary">TN Tech Chem</th>
+            <th class="pct">Gap vs R2</th>
+            <th class="pct">Gap vs Peers</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td><strong>Professor</strong></td>
+            <td class="salary">$124,806</td>
+            <td class="salary">$99,784</td>
+            <td class="salary">$96,987</td>
+            <td class="gap negative pct">-22.3%</td>
+            <td class="gap negative pct">-2.8%</td>
+        </tr>
+        <tr>
+            <td><strong>Associate Professor</strong></td>
+            <td class="salary">$98,274</td>
+            <td class="salary">$83,768</td>
+            <td class="salary">$75,674</td>
+            <td class="gap negative pct">-23.0%</td>
+            <td class="gap negative pct">-9.7%</td>
+        </tr>
+        <tr>
+            <td><strong>Assistant Professor</strong></td>
+            <td class="salary">$86,682</td>
+            <td class="salary">$73,666</td>
+            <td class="salary">$71,350</td>
+            <td class="gap negative pct">-17.7%</td>
+            <td class="gap negative pct">-3.1%</td>
+        </tr>
+    </tbody>
+</table>
+
+<p class="source-note">Sources: CUPA-HR 2024 R2 Doctoral Universities | MTSU/ETSU weighted average | TN Tech FY23-24 Budget</p>
+
+<div class="page-break"></div>
+
+<!-- ============================================== -->
+<!-- PART 2: MERIT EVALUATION FRAMEWORK -->
+<!-- ============================================== -->
+
+<h2>Part 2: Merit-Based Evaluation Framework</h2>
+
+<div class="callout info">
+    <strong>Why Merit Matters:</strong> Administration will not approve "across the board" increases without performance accountability. A merit-weighted approach ensures high performers benefit most while maintaining the equity correction. This framework aligns with TN Tech Policy 206 and standard R2 practices.
+</div>
+
+<h3>Standard Academic Weighting (R2 Universities)</h3>
+
+<div class="weight-bar">
+    <div class="segment teaching" style="width: 40%;">Teaching 40%</div>
+    <div class="segment research" style="width: 40%;">Research 40%</div>
+    <div class="segment service" style="width: 20%;">Service 20%</div>
+</div>
+
+<p class="source-note">Standard for R2 tenure-track faculty per UC Boulder, Texas State, MTSU. Teaching-focused positions may use 60/20/20 or 70/10/20.</p>
+
+<h3>Merit Evaluation Categories</h3>
+
+<div class="three-col">
+    <div class="merit-card">
+        <h4>Teaching <span class="weight">40%</span></h4>
+        <ul class="metric-list">
+            <li>Student course evaluations (IDEA scores)</li>
+            <li>Peer teaching observations</li>
+            <li>Course development/innovation</li>
+            <li>Student mentoring (undergrad research)</li>
+            <li>Graduate student supervision</li>
+            <li>Curriculum development</li>
+            <li>Pedagogical publications</li>
+        </ul>
+    </div>
+    <div class="merit-card">
+        <h4>Research <span class="weight">40%</span></h4>
+        <ul class="metric-list">
+            <li>Peer-reviewed publications</li>
+            <li>Grant funding (awarded/submitted)</li>
+            <li>H-index / citation metrics</li>
+            <li>Conference presentations</li>
+            <li>Book chapters / patents</li>
+            <li>Graduate students graduated</li>
+            <li>Research collaborations</li>
+        </ul>
+    </div>
+    <div class="merit-card">
+        <h4>Service <span class="weight">20%</span></h4>
+        <ul class="metric-list">
+            <li>Department committees</li>
+            <li>University governance</li>
+            <li>Professional society roles</li>
+            <li>Journal reviewing/editing</li>
+            <li>Community outreach</li>
+            <li>Accreditation activities</li>
+            <li>Faculty mentoring</li>
+        </ul>
+    </div>
+</div>
+
+<h3>Rating Scale</h3>
+
+<div class="rating-scale">
+    <div class="rating exceeds">4 - Exceeds Expectations</div>
+    <div class="rating meets">3 - Meets Expectations</div>
+    <div class="rating developing">2 - Developing</div>
+    <div class="rating unsatisfactory">1 - Unsatisfactory</div>
+</div>
+
+<p style="font-size: 9pt; margin-top: 8px;"><strong>Eligibility:</strong> Faculty must have overall rating ≥3.0 to be eligible for equity adjustments. Faculty rated &lt;3.0 receive developmental support plan instead. (Per APSU, Texas State, UC Boulder models)</p>
+
+<h3>Chemistry-Specific Research Benchmarks</h3>
+
+<table>
+    <thead>
+        <tr>
+            <th>Metric</th>
+            <th class="center">Exceeds (4)</th>
+            <th class="center">Meets (3)</th>
+            <th class="center">Developing (2)</th>
+            <th class="center">Below (1)</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td><strong>Peer-Reviewed Pubs/Year</strong></td>
+            <td class="center">≥4</td>
+            <td class="center">2-3</td>
+            <td class="center">1</td>
+            <td class="center">0</td>
+        </tr>
+        <tr>
+            <td><strong>Grant Funding (Active)</strong></td>
+            <td class="center">≥$200K</td>
+            <td class="center">$50-200K</td>
+            <td class="center">Proposals submitted</td>
+            <td class="center">No activity</td>
+        </tr>
+        <tr>
+            <td><strong>H-Index (Prof)</strong></td>
+            <td class="center">≥20</td>
+            <td class="center">10-19</td>
+            <td class="center">5-9</td>
+            <td class="center">&lt;5</td>
+        </tr>
+        <tr>
+            <td><strong>H-Index (Assoc Prof)</strong></td>
+            <td class="center">≥12</td>
+            <td class="center">6-11</td>
+            <td class="center">3-5</td>
+            <td class="center">&lt;3</td>
+        </tr>
+        <tr>
+            <td><strong>Grad Students Supervised</strong></td>
+            <td class="center">≥3 active</td>
+            <td class="center">1-2 active</td>
+            <td class="center">Recruiting</td>
+            <td class="center">None</td>
+        </tr>
+        <tr>
+            <td><strong>IDEA Teaching Score</strong></td>
+            <td class="center">≥4.2</td>
+            <td class="center">3.5-4.1</td>
+            <td class="center">3.0-3.4</td>
+            <td class="center">&lt;3.0</td>
+        </tr>
+    </tbody>
+</table>
+
+<p class="source-note">Benchmarks derived from ACS Journal of Chemical Education standards, PMC h-index study for chemistry, and CUPA research expectations for R2 institutions.</p>
+
+<div class="page-break"></div>
+
+<!-- ============================================== -->
+<!-- PART 3: INTEGRATED MERIT-EQUITY MODEL -->
+<!-- ============================================== -->
+
+<h2>Part 3: Integrated Merit-Equity Adjustment Model</h2>
+
+<div class="callout success">
+    <strong>Key Principle:</strong> Separate equity corrections from merit increases. Equity addresses <em>structural</em> underpayment relative to market. Merit rewards <em>performance</em> above expectations. Both are necessary; neither replaces the other.
+</div>
+
+<h3>Proposed Adjustment Formula</h3>
+
+<div class="formula-box">
+<strong>Total Adjustment = Equity Adjustment × Merit Multiplier</strong><br><br>
+Where:<br>
+• <strong>Equity Adjustment</strong> = (Market Benchmark × Target Percentile) - Current Salary<br>
+• <strong>Merit Multiplier</strong> = 0.75 + (Merit Score × 0.125)  [Range: 0.875 to 1.25]<br><br>
+Example: Rating 4 = 1.25x, Rating 3 = 1.0x, Rating 2 = 0.875x
+</div>
+
+<p style="font-size: 9pt;">This formula ensures all eligible faculty (≥3.0 rating) receive equity adjustments, while exceptional performers (4.0) receive 25% more than the base equity correction. Faculty rated 2.0-2.9 receive 87.5% of the equity adjustment plus a development plan.</p>
+
+<h3>Model Calculation: Associate Professor Example</h3>
+
+<table>
+    <thead>
+        <tr>
+            <th>Scenario</th>
+            <th class="salary">Current</th>
+            <th class="salary">Target (90% R2)</th>
+            <th class="salary">Base Equity</th>
+            <th class="center">Merit</th>
+            <th class="salary">Final Adj</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>High Performer (4.0)</td>
+            <td class="salary">$74,000</td>
+            <td class="salary">$88,447</td>
+            <td class="salary">$14,447</td>
+            <td class="center">×1.25</td>
+            <td class="salary above-market">$18,059</td>
+        </tr>
+        <tr>
+            <td>Solid Performer (3.5)</td>
+            <td class="salary">$74,000</td>
+            <td class="salary">$88,447</td>
+            <td class="salary">$14,447</td>
+            <td class="center">×1.125</td>
+            <td class="salary">$16,253</td>
+        </tr>
+        <tr>
+            <td>Meets Expectations (3.0)</td>
+            <td class="salary">$74,000</td>
+            <td class="salary">$88,447</td>
+            <td class="salary">$14,447</td>
+            <td class="center">×1.0</td>
+            <td class="salary">$14,447</td>
+        </tr>
+        <tr>
+            <td>Developing (2.5)</td>
+            <td class="salary">$74,000</td>
+            <td class="salary">$88,447</td>
+            <td class="salary">$14,447</td>
+            <td class="center">×0.875</td>
+            <td class="salary at-market">$12,641</td>
+        </tr>
+    </tbody>
+</table>
+
+<p class="source-note">Target = 90th percentile of R2 market. Adjustments phased over 3-5 years. Faculty below 2.0 not eligible until performance improves.</p>
+
+<h3>Recommended Phased Implementation</h3>
+
+<table>
+    <thead>
+        <tr>
+            <th>Phase</th>
+            <th>Timeline</th>
+            <th>Focus</th>
+            <th class="salary">Est. Cost</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td><strong>Phase 1</strong></td>
+            <td>Year 1</td>
+            <td>Fix rank inversions (Asst Prof earning more than Assoc Prof)</td>
+            <td class="salary">$15,200</td>
+        </tr>
+        <tr>
+            <td><strong>Phase 2</strong></td>
+            <td>Year 1-2</td>
+            <td>Fix experience inversions (junior earning more than senior at same rank)</td>
+            <td class="salary">$8,000</td>
+        </tr>
+        <tr>
+            <td><strong>Phase 3</strong></td>
+            <td>Years 2-4</td>
+            <td>Merit-weighted market adjustments (highest performers first)</td>
+            <td class="salary">$40,000</td>
+        </tr>
+        <tr>
+            <td><strong>Phase 4</strong></td>
+            <td>Years 4-5</td>
+            <td>Compression remediation (experience within rank)</td>
+            <td class="salary">$15,000</td>
+        </tr>
+        <tr style="background: #4a2c82; color: white;">
+            <td><strong>Total</strong></td>
+            <td>5 Years</td>
+            <td>Full Market Alignment</td>
+            <td class="salary"><strong>~$78,000</strong></td>
+        </tr>
+    </tbody>
+</table>
+
+<div class="page-break"></div>
+
+<!-- ============================================== -->
+<!-- PART 4: DATA COLLECTION REQUIREMENTS -->
+<!-- ============================================== -->
+
+<h2>Part 4: Merit Data Collection Requirements</h2>
+
+<div class="two-col">
+    <div class="methodology-box">
+        <h4>Annual Faculty Activity Report</h4>
+        <ul>
+            <li>Publications (with journal impact factors)</li>
+            <li>Grant submissions and awards</li>
+            <li>Conference presentations</li>
+            <li>Student evaluations (IDEA scores)</li>
+            <li>Graduate students mentored</li>
+            <li>Committee service</li>
+            <li>Professional development</li>
+        </ul>
+        <p style="margin-top: 8px; font-size: 8pt;"><em>TN Tech uses Digital Measures / Faculty Success for tracking</em></p>
+    </div>
+    <div class="methodology-box">
+        <h4>External Verification</h4>
+        <ul>
+            <li>Google Scholar h-index</li>
+            <li>Web of Science citations</li>
+            <li>NSF/NIH grant databases</li>
+            <li>IDEA comparative reports</li>
+            <li>ACS membership records</li>
+            <li>Peer review documentation</li>
+        </ul>
+        <p style="margin-top: 8px; font-size: 8pt;"><em>Chair verifies data; Dean reviews anomalies</em></p>
+    </div>
+</div>
+
+<h3>Proposed Merit Review Committee Structure</h3>
+
+<table>
+    <thead>
+        <tr>
+            <th>Level</th>
+            <th>Composition</th>
+            <th>Role</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td><strong>Department</strong></td>
+            <td>3 tenured faculty (elected) + Chair</td>
+            <td>Initial merit ratings, peer review of teaching/research</td>
+        </tr>
+        <tr>
+            <td><strong>College</strong></td>
+            <td>Dean + Associate Dean + 2 Chairs</td>
+            <td>Cross-department calibration, equity review</td>
+        </tr>
+        <tr>
+            <td><strong>Provost</strong></td>
+            <td>Provost Office + IR</td>
+            <td>Final approval, CUPA benchmark alignment</td>
+        </tr>
+    </tbody>
+</table>
+
+<h2>Part 5: Faculty Senate Resolution Framework</h2>
+
+<div class="callout success">
+    <strong>Recommended Resolution Points:</strong>
+    <ol style="margin-left: 20px; margin-top: 8px;">
+        <li><strong>Establish Chemistry Salary Equity Review Committee</strong> — 3 tenured faculty + Chair, annual review</li>
+        <li><strong>Request CUPA Data Access</strong> — Chemistry CIP 40.05, R2 public peer group, Southeast region</li>
+        <li><strong>Adopt Merit-Weighted Equity Model</strong> — Performance multiplier tied to annual reviews</li>
+        <li><strong>Create Dedicated Equity Pool</strong> — Separate from merit increases (~$20K/year for Chemistry)</li>
+        <li><strong>Phase 1 Priority</strong> — Immediate correction of documented inversions ($15K)</li>
+        <li><strong>Annual Benchmarking</strong> — Compare to CUPA medians each year with transparent methodology</li>
+        <li><strong>Appeals Process</strong> — Faculty may appeal merit ratings per existing TN Tech Policy 206</li>
+    </ol>
+</div>
+
+<h2>Administrative Framing</h2>
+
+<div class="callout">
+    <strong>Retention Risk Language:</strong> Faculty replacement cost is 1.5-2× annual salary (search, startup, lost productivity). A $5,000 retention raise costs far less than a $150,000+ replacement. The Chemistry department has already experienced attrition concerns; proactive equity investment protects institutional investment in faculty.
+</div>
+
+<div class="footer">
+    <p>Prepared for Tennessee Tech Faculty Senate | Chemistry Department Salary Equity Working Group</p>
+    <p>Data compiled November 2024 | Framework aligned with TN Tech Policy 206, CUPA-HR, AAUP Best Practices</p>
+    <p style="margin-top: 4px; font-size: 7pt;">Sources: CUPA-HR 2024, AAUP Faculty Compensation Survey, UC Boulder Merit Guidelines, Texas State AA/PPS 04.01.50, TN Tech Faculty Handbook</p>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,884 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TN Tech Chemistry Department - Faculty Salary Equity Analysis</title>
+    <style>
+        @media print {
+            body { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+            .page-break { page-break-before: always; }
+            .no-print { display: none; }
+        }
+        
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-size: 11pt;
+            line-height: 1.4;
+            color: #1a1a1a;
+            max-width: 8.5in;
+            margin: 0 auto;
+            padding: 0.5in;
+            background: #fff;
+        }
+        
+        .header {
+            border-bottom: 3px solid #4a2c82;
+            padding-bottom: 12px;
+            margin-bottom: 20px;
+        }
+        
+        .header h1 {
+            font-size: 18pt;
+            color: #4a2c82;
+            margin-bottom: 4px;
+        }
+        
+        .header .subtitle {
+            font-size: 12pt;
+            color: #666;
+        }
+        
+        .header .date {
+            font-size: 10pt;
+            color: #888;
+            margin-top: 4px;
+        }
+        
+        .executive-summary {
+            background: #f8f6fb;
+            border-left: 4px solid #4a2c82;
+            padding: 12px 16px;
+            margin-bottom: 20px;
+        }
+        
+        .executive-summary h2 {
+            font-size: 12pt;
+            color: #4a2c82;
+            margin-bottom: 8px;
+        }
+        
+        .key-findings {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+        
+        .finding-box {
+            background: #fff;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            padding: 12px;
+            text-align: center;
+        }
+        
+        .finding-box .number {
+            font-size: 24pt;
+            font-weight: bold;
+            color: #c41e3a;
+        }
+        
+        .finding-box .number.positive {
+            color: #2e7d32;
+        }
+        
+        .finding-box .label {
+            font-size: 9pt;
+            color: #666;
+            margin-top: 4px;
+        }
+        
+        h2 {
+            font-size: 13pt;
+            color: #4a2c82;
+            border-bottom: 1px solid #ddd;
+            padding-bottom: 6px;
+            margin: 20px 0 12px 0;
+        }
+        
+        h3 {
+            font-size: 11pt;
+            color: #333;
+            margin: 14px 0 8px 0;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 9pt;
+            margin-bottom: 16px;
+        }
+        
+        th {
+            background: #4a2c82;
+            color: white;
+            padding: 8px 6px;
+            text-align: left;
+            font-weight: 600;
+        }
+        
+        td {
+            padding: 6px;
+            border-bottom: 1px solid #e0e0e0;
+        }
+        
+        tr:nth-child(even) {
+            background: #f9f9f9;
+        }
+        
+        tr.inversion {
+            background: #fff3f3;
+        }
+        
+        tr.compression {
+            background: #fff8e6;
+        }
+        
+        tr.highlight {
+            background: #e8f5e9;
+            font-weight: 600;
+        }
+        
+        .salary {
+            text-align: right;
+            font-family: 'Courier New', monospace;
+        }
+        
+        .years {
+            text-align: center;
+        }
+        
+        .flag {
+            display: inline-block;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-size: 8pt;
+            font-weight: bold;
+        }
+        
+        .flag.inversion {
+            background: #c41e3a;
+            color: white;
+        }
+        
+        .flag.compression {
+            background: #f57c00;
+            color: white;
+        }
+        
+        .definition-box {
+            background: #f5f5f5;
+            border-radius: 6px;
+            padding: 12px;
+            margin-bottom: 16px;
+            font-size: 10pt;
+        }
+        
+        .definition-box dt {
+            font-weight: bold;
+            color: #4a2c82;
+        }
+        
+        .definition-box dd {
+            margin-left: 0;
+            margin-bottom: 8px;
+        }
+        
+        .chart-container {
+            width: 100%;
+            height: 280px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            margin-bottom: 16px;
+            position: relative;
+            background: #fafafa;
+        }
+        
+        .chart-title {
+            position: absolute;
+            top: 8px;
+            left: 12px;
+            font-size: 10pt;
+            font-weight: bold;
+            color: #333;
+        }
+        
+        .chart-area {
+            position: absolute;
+            top: 35px;
+            left: 50px;
+            right: 20px;
+            bottom: 40px;
+        }
+        
+        .y-axis {
+            position: absolute;
+            left: 10px;
+            top: 35px;
+            bottom: 40px;
+            width: 40px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            align-items: flex-end;
+            font-size: 8pt;
+            color: #666;
+        }
+        
+        .x-axis {
+            position: absolute;
+            bottom: 10px;
+            left: 50px;
+            right: 20px;
+            display: flex;
+            justify-content: space-between;
+            font-size: 8pt;
+            color: #666;
+        }
+        
+        .x-label {
+            position: absolute;
+            bottom: 24px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 9pt;
+            color: #333;
+        }
+        
+        .y-label {
+            position: absolute;
+            left: -5px;
+            top: 50%;
+            transform: rotate(-90deg) translateX(-50%);
+            font-size: 9pt;
+            color: #333;
+            white-space: nowrap;
+        }
+        
+        .dot {
+            position: absolute;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            border: 2px solid white;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.3);
+        }
+        
+        .dot.professor { background: #1565c0; }
+        .dot.associate { background: #2e7d32; }
+        .dot.assistant { background: #f57c00; }
+        .dot.other { background: #757575; }
+        
+        .legend {
+            display: flex;
+            gap: 16px;
+            justify-content: center;
+            margin-top: 8px;
+            font-size: 9pt;
+        }
+        
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+        
+        .legend-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+        }
+        
+        .inversion-detail {
+            background: #fff3f3;
+            border: 1px solid #e57373;
+            border-radius: 6px;
+            padding: 12px;
+            margin-bottom: 12px;
+        }
+        
+        .inversion-detail h4 {
+            color: #c41e3a;
+            font-size: 10pt;
+            margin-bottom: 6px;
+        }
+        
+        .inversion-detail .comparison {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 10pt;
+        }
+        
+        .inversion-detail .vs {
+            font-weight: bold;
+            color: #c41e3a;
+        }
+        
+        .inversion-detail .amount {
+            background: #c41e3a;
+            color: white;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-weight: bold;
+        }
+        
+        .recommendations {
+            background: #e8f5e9;
+            border-radius: 6px;
+            padding: 16px;
+            margin-bottom: 16px;
+        }
+        
+        .recommendations h3 {
+            color: #2e7d32;
+            margin-top: 0;
+        }
+        
+        .recommendations ol {
+            margin-left: 20px;
+        }
+        
+        .recommendations li {
+            margin-bottom: 8px;
+        }
+        
+        .cost-table {
+            width: auto;
+            margin: 0 auto;
+        }
+        
+        .cost-table th, .cost-table td {
+            padding: 8px 16px;
+        }
+        
+        .cost-table .total {
+            background: #4a2c82;
+            color: white;
+            font-weight: bold;
+        }
+        
+        .footer {
+            margin-top: 30px;
+            padding-top: 12px;
+            border-top: 1px solid #ddd;
+            font-size: 9pt;
+            color: #666;
+            text-align: center;
+        }
+        
+        .source-note {
+            font-size: 9pt;
+            color: #666;
+            font-style: italic;
+            margin-top: 8px;
+        }
+        
+        .trendline {
+            position: absolute;
+            height: 2px;
+            background: #aaa;
+            transform-origin: left center;
+        }
+        
+        .callout {
+            background: #fff8e6;
+            border-left: 4px solid #f57c00;
+            padding: 10px 14px;
+            margin: 16px 0;
+            font-size: 10pt;
+        }
+        
+        .two-column {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+        
+        @media print {
+            body {
+                padding: 0.3in;
+            }
+            .finding-box .number {
+                font-size: 20pt;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="header">
+    <h1>Faculty Salary Equity Analysis</h1>
+    <div class="subtitle">Tennessee Technological University — Department of Chemistry</div>
+    <div class="date">Data Source: FY2023-24 Personnel Budget | Prepared for Faculty Senate Review</div>
+</div>
+
+<div class="executive-summary">
+    <h2>Executive Summary</h2>
+    <p>Analysis of the Chemistry Department's 21 faculty salaries reveals <strong>3 salary inversions</strong> and <strong>significant compression</strong> between ranks. New assistant professors hired at $71K+ now exceed tenured faculty with 15+ years of service. Immediate action is recommended to address inversions, with a phased approach to resolve compression over 3-5 years.</p>
+</div>
+
+<div class="key-findings">
+    <div class="finding-box">
+        <div class="number">3</div>
+        <div class="label">Documented Inversions</div>
+    </div>
+    <div class="finding-box">
+        <div class="number">9.4%</div>
+        <div class="label">Max Differential (21 yr gap)<br>Industry standard: 25-35%</div>
+    </div>
+    <div class="finding-box">
+        <div class="number">$15,200</div>
+        <div class="label">Est. Cost to Fix Inversions</div>
+    </div>
+</div>
+
+<h2>Definitions</h2>
+<div class="definition-box">
+    <dl>
+        <dt>Salary Inversion</dt>
+        <dd>When a lower-ranked or less senior faculty member earns more than a higher-ranked or more senior colleague. Example: New Asst. Professor earning more than tenured Assoc. Professor.</dd>
+        
+        <dt>Salary Compression</dt>
+        <dd>When the salary differential between ranks or experience levels is ≤ 9%, failing to appropriately recognize seniority and career progression. Industry standard differentials: 25-35% between ranks.</dd>
+    </dl>
+</div>
+
+<h2>Faculty Salary Data by Rank</h2>
+<table>
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Rank</th>
+            <th>Tenure</th>
+            <th class="years">Exp (yrs)</th>
+            <th class="years">Seniority</th>
+            <th class="salary">Salary</th>
+            <th>Flag</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>Boles, Jeffrey O (Chair)</td>
+            <td>Professor</td>
+            <td>Tenured</td>
+            <td class="years">31</td>
+            <td class="years">29</td>
+            <td class="salary">$106,785</td>
+            <td></td>
+        </tr>
+        <tr>
+            <td>Lisic, Edward C</td>
+            <td>Professor</td>
+            <td>Tenured</td>
+            <td class="years">36</td>
+            <td class="years">34</td>
+            <td class="salary">$103,870</td>
+            <td></td>
+        </tr>
+        <tr>
+            <td>Zhang, Hong</td>
+            <td>Professor</td>
+            <td>Tenured</td>
+            <td class="years">21</td>
+            <td class="years">21</td>
+            <td class="salary">$89,465</td>
+            <td></td>
+        </tr>
+        <tr>
+            <td>Carrick, Jesse D</td>
+            <td>Professor</td>
+            <td>Tenured</td>
+            <td class="years">12</td>
+            <td class="years">12</td>
+            <td class="salary">$87,827</td>
+            <td></td>
+        </tr>
+        <tr>
+            <td>Swartling, Daniel J</td>
+            <td>Assoc. Prof</td>
+            <td>Tenured</td>
+            <td class="years">34</td>
+            <td class="years">29</td>
+            <td class="salary">$81,279</td>
+            <td><span class="flag compression">COMPRESSION</span></td>
+        </tr>
+        <tr>
+            <td>Zhan, Xuanzhi</td>
+            <td>Assoc. Prof</td>
+            <td>Tenured</td>
+            <td class="years">9</td>
+            <td class="years">9</td>
+            <td class="salary">$75,349</td>
+            <td></td>
+        </tr>
+        <tr class="highlight">
+            <td>Carroll, William R</td>
+            <td>Assoc. Prof</td>
+            <td>Tenured</td>
+            <td class="years">10</td>
+            <td class="years">10</td>
+            <td class="salary">$74,123</td>
+            <td></td>
+        </tr>
+        <tr>
+            <td>Gichuhi, Wilson K</td>
+            <td>Assoc. Prof</td>
+            <td>Tenured</td>
+            <td class="years">8</td>
+            <td class="years">8</td>
+            <td class="salary">$73,978</td>
+            <td></td>
+        </tr>
+        <tr class="inversion">
+            <td>Cojocaru, Oana A</td>
+            <td>Asst. Prof</td>
+            <td>Pre-tenure</td>
+            <td class="years">8</td>
+            <td class="years">8</td>
+            <td class="salary">$73,324</td>
+            <td><span class="flag inversion">INVERSION</span></td>
+        </tr>
+        <tr class="inversion">
+            <td>Rezsnyak, Chad E</td>
+            <td>Assoc. Prof</td>
+            <td>Tenured</td>
+            <td class="years">10</td>
+            <td class="years">10</td>
+            <td class="salary">$72,821</td>
+            <td><span class="flag inversion">INVERSION</span></td>
+        </tr>
+        <tr class="inversion">
+            <td>Dan, David</td>
+            <td>Asst. Prof</td>
+            <td>Pre-tenure</td>
+            <td class="years">0</td>
+            <td class="years">0</td>
+            <td class="salary">$71,750</td>
+            <td><span class="flag inversion">INVERSION</span></td>
+        </tr>
+        <tr class="inversion">
+            <td>Gurusinghe, Ranil</td>
+            <td>Asst. Prof</td>
+            <td>Pre-tenure</td>
+            <td class="years">0</td>
+            <td class="years">0</td>
+            <td class="salary">$71,750</td>
+            <td><span class="flag inversion">INVERSION</span></td>
+        </tr>
+        <tr class="inversion">
+            <td>Murphy, Kyle</td>
+            <td>Asst. Prof</td>
+            <td>Pre-tenure</td>
+            <td class="years">0</td>
+            <td class="years">0</td>
+            <td class="salary">$71,072</td>
+            <td><span class="flag inversion">INVERSION</span></td>
+        </tr>
+        <tr class="inversion">
+            <td>Callender, Andrew</td>
+            <td>Asst. Prof</td>
+            <td>Tenured</td>
+            <td class="years">15</td>
+            <td class="years">15</td>
+            <td class="salary">$69,542</td>
+            <td><span class="flag inversion">INVERSION</span></td>
+        </tr>
+        <tr>
+            <td>Coonce, Janet G</td>
+            <td>Sr. Instructor</td>
+            <td>Tenured</td>
+            <td class="years">15</td>
+            <td class="years">15</td>
+            <td class="salary">$64,982</td>
+            <td></td>
+        </tr>
+        <tr>
+            <td>Rust, Kathryn M</td>
+            <td>Instructor</td>
+            <td>Tenured</td>
+            <td class="years">33</td>
+            <td class="years">33</td>
+            <td class="salary">$60,146</td>
+            <td></td>
+        </tr>
+        <tr>
+            <td>Carroll, Amanda J</td>
+            <td>Sr. Lecturer</td>
+            <td>Non-tenure</td>
+            <td class="years">11</td>
+            <td class="years">11</td>
+            <td class="salary">$56,864</td>
+            <td></td>
+        </tr>
+        <tr>
+            <td>Majors, Twanelle W</td>
+            <td>Sr. Lecturer</td>
+            <td>Non-tenure</td>
+            <td class="years">8</td>
+            <td class="years">8</td>
+            <td class="salary">$55,904</td>
+            <td></td>
+        </tr>
+        <tr>
+            <td>Carrick, Ann Marie S</td>
+            <td>Sr. Instructor</td>
+            <td>Tenured</td>
+            <td class="years">12</td>
+            <td class="years">12</td>
+            <td class="salary">$55,082</td>
+            <td></td>
+        </tr>
+        <tr>
+            <td>Cashman, Derek J</td>
+            <td>Lecturer</td>
+            <td>Non-tenure</td>
+            <td class="years">10</td>
+            <td class="years">10</td>
+            <td class="salary">$51,891</td>
+            <td></td>
+        </tr>
+        <tr>
+            <td>Moldenhauer, Jonathan C</td>
+            <td>Lecturer</td>
+            <td>Non-tenure</td>
+            <td class="years">6</td>
+            <td class="years">6</td>
+            <td class="salary">$47,854</td>
+            <td></td>
+        </tr>
+    </tbody>
+</table>
+<p class="source-note">Source: TN Tech October Budget Personnel FY2023-24, pages 6-7</p>
+
+<div class="page-break"></div>
+
+<h2>Salary vs. Years of Service Visualization</h2>
+<div class="chart-container">
+    <div class="chart-title">Faculty Salary by Years of Seniority at TTU</div>
+    <div class="y-label">Annual Salary ($)</div>
+    <div class="x-label">Years of Seniority at TTU</div>
+    <div class="y-axis">
+        <span>$110K</span>
+        <span>$100K</span>
+        <span>$90K</span>
+        <span>$80K</span>
+        <span>$70K</span>
+        <span>$60K</span>
+        <span>$50K</span>
+    </div>
+    <div class="x-axis">
+        <span>0</span>
+        <span>5</span>
+        <span>10</span>
+        <span>15</span>
+        <span>20</span>
+        <span>25</span>
+        <span>30</span>
+        <span>35</span>
+    </div>
+    <div class="chart-area">
+        <!-- Professors (blue) -->
+        <div class="dot professor" style="left: 82.8%; bottom: 94.6%;" title="Boles: 29 yrs, $106,785"></div>
+        <div class="dot professor" style="left: 97.1%; bottom: 89.6%;" title="Lisic: 34 yrs, $103,870"></div>
+        <div class="dot professor" style="left: 60%; bottom: 65.4%;" title="Zhang: 21 yrs, $89,465"></div>
+        <div class="dot professor" style="left: 34.3%; bottom: 62.7%;" title="Carrick J: 12 yrs, $87,827"></div>
+        
+        <!-- Associate Professors (green) -->
+        <div class="dot associate" style="left: 82.8%; bottom: 52.1%;" title="Swartling: 29 yrs, $81,279"></div>
+        <div class="dot associate" style="left: 25.7%; bottom: 42.2%;" title="Zhan: 9 yrs, $75,349"></div>
+        <div class="dot associate" style="left: 28.6%; bottom: 40.2%;" title="Carroll W: 10 yrs, $74,123"></div>
+        <div class="dot associate" style="left: 22.9%; bottom: 40%;" title="Gichuhi: 8 yrs, $73,978"></div>
+        <div class="dot associate" style="left: 28.6%; bottom: 38%;" title="Rezsnyak: 10 yrs, $72,821"></div>
+        
+        <!-- Assistant Professors (orange) -->
+        <div class="dot assistant" style="left: 22.9%; bottom: 38.9%;" title="Cojocaru: 8 yrs, $73,324"></div>
+        <div class="dot assistant" style="left: 0%; bottom: 36.2%;" title="Dan: 0 yrs, $71,750"></div>
+        <div class="dot assistant" style="left: 0%; bottom: 36.2%;" title="Gurusinghe: 0 yrs, $71,750"></div>
+        <div class="dot assistant" style="left: 0%; bottom: 35.1%;" title="Murphy: 0 yrs, $71,072"></div>
+        <div class="dot assistant" style="left: 42.9%; bottom: 32.6%;" title="Callender: 15 yrs, $69,542"></div>
+        
+        <!-- Others (gray) -->
+        <div class="dot other" style="left: 42.9%; bottom: 25%;" title="Coonce: 15 yrs, $64,982"></div>
+        <div class="dot other" style="left: 94.3%; bottom: 16.9%;" title="Rust: 33 yrs, $60,146"></div>
+    </div>
+</div>
+<div class="legend">
+    <div class="legend-item"><div class="legend-dot" style="background: #1565c0;"></div> Professor</div>
+    <div class="legend-item"><div class="legend-dot" style="background: #2e7d32;"></div> Associate Prof</div>
+    <div class="legend-item"><div class="legend-dot" style="background: #f57c00;"></div> Assistant Prof</div>
+    <div class="legend-item"><div class="legend-dot" style="background: #757575;"></div> Instructor/Lecturer</div>
+</div>
+
+<div class="callout">
+    <strong>Key Observation:</strong> The scatter plot reveals a clustering of salaries between $69K-$76K regardless of rank or experience, indicating severe compression. New hires at 0 years are within $5K of associates with 10 years of service.
+</div>
+
+<h2>Documented Inversions</h2>
+
+<div class="inversion-detail">
+    <h4>Inversion #1: Rank Inversion (Assistant exceeds Associate)</h4>
+    <div class="comparison">
+        <span><strong>Cojocaru</strong> (Asst Prof, 8 yrs): $73,324</span>
+        <span class="vs">vs</span>
+        <span><strong>Rezsnyak</strong> (Assoc Prof, 10 yrs): $72,821</span>
+        <span class="amount">+$503</span>
+    </div>
+</div>
+
+<div class="inversion-detail">
+    <h4>Inversion #2: Experience Inversion (New hire exceeds senior)</h4>
+    <div class="comparison">
+        <span><strong>Dan/Gurusinghe</strong> (Asst Prof, 0 yrs): $71,750</span>
+        <span class="vs">vs</span>
+        <span><strong>Callender</strong> (Asst Prof, 15 yrs): $69,542</span>
+        <span class="amount">+$2,208</span>
+    </div>
+</div>
+
+<div class="inversion-detail">
+    <h4>Inversion #3: Experience Inversion (New hire exceeds senior)</h4>
+    <div class="comparison">
+        <span><strong>Murphy</strong> (Asst Prof, 0 yrs): $71,072</span>
+        <span class="vs">vs</span>
+        <span><strong>Callender</strong> (Asst Prof, 15 yrs): $69,542</span>
+        <span class="amount">+$1,530</span>
+    </div>
+</div>
+
+<h2>Compression Analysis</h2>
+
+<div class="two-column">
+    <div>
+        <h3>Within Associate Professor Rank</h3>
+        <table>
+            <tr>
+                <td>Highest (Swartling, 29 yrs)</td>
+                <td class="salary">$81,279</td>
+            </tr>
+            <tr>
+                <td>Lowest (Rezsnyak, 10 yrs)</td>
+                <td class="salary">$72,821</td>
+            </tr>
+            <tr style="background: #fff8e6;">
+                <td><strong>Differential (19 yr gap)</strong></td>
+                <td class="salary"><strong>11.6%</strong></td>
+            </tr>
+            <tr>
+                <td>Industry Standard</td>
+                <td class="salary">30-40%</td>
+            </tr>
+        </table>
+    </div>
+    <div>
+        <h3>Between Ranks</h3>
+        <table>
+            <tr>
+                <td>Avg Professor (non-chair)</td>
+                <td class="salary">$93,720</td>
+            </tr>
+            <tr>
+                <td>Avg Associate Professor</td>
+                <td class="salary">$75,690</td>
+            </tr>
+            <tr style="background: #e8f5e9;">
+                <td><strong>Rank Differential</strong></td>
+                <td class="salary"><strong>23.8%</strong></td>
+            </tr>
+            <tr>
+                <td>Industry Standard</td>
+                <td class="salary">25-35%</td>
+            </tr>
+        </table>
+    </div>
+</div>
+
+<div class="page-break"></div>
+
+<h2>Estimated Remediation Costs</h2>
+
+<table class="cost-table">
+    <thead>
+        <tr>
+            <th>Category</th>
+            <th>Affected Faculty</th>
+            <th>Est. Adjustment</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>Inversion: Callender (vs new hires)</td>
+            <td>1</td>
+            <td class="salary">$2,500</td>
+        </tr>
+        <tr>
+            <td>Inversion: Rezsnyak (vs Cojocaru)</td>
+            <td>1</td>
+            <td class="salary">$700</td>
+        </tr>
+        <tr>
+            <td>Compression: Associates 10+ yrs</td>
+            <td>3</td>
+            <td class="salary">$6,000</td>
+        </tr>
+        <tr>
+            <td>Compression: Swartling (29 yrs)</td>
+            <td>1</td>
+            <td class="salary">$6,000</td>
+        </tr>
+        <tr class="total">
+            <td><strong>Total Estimated Cost (Year 1)</strong></td>
+            <td><strong>6</strong></td>
+            <td class="salary"><strong>$15,200</strong></td>
+        </tr>
+    </tbody>
+</table>
+
+<p class="source-note">Estimates based on bringing inverted salaries $200 above the comparison point plus $100/year seniority adjustment. Compression adjustments estimated at 2-3% of current salary.</p>
+
+<h2>Recommendations</h2>
+
+<div class="recommendations">
+    <h3>Proposed Faculty Senate Resolution</h3>
+    <ol>
+        <li><strong>Establish a Salary Inversion Review Committee</strong> with faculty representation to annually identify and recommend corrections for inversions.</li>
+        <li><strong>Request CUPA benchmark data</strong> for Chemistry (CIP 40.05) at R2 public institutions in the Southeast region for external market comparison.</li>
+        <li><strong>Propose a dedicated equity pool</strong> separate from annual merit increases, starting at $15,000-$20,000 annually for the Chemistry department.</li>
+        <li><strong>Implement a phased approach:</strong>
+            <ul>
+                <li>Year 1: Correct all rank inversions (Assistant > Associate)</li>
+                <li>Year 2: Correct experience inversions (New hire > Senior)</li>
+                <li>Years 3-5: Address compression systematically</li>
+            </ul>
+        </li>
+        <li><strong>Establish transparent methodology</strong> using the formula: Adjusted Salary = Comparison Salary + $200 + ($100 × years in rank)</li>
+    </ol>
+</div>
+
+<div class="callout">
+    <strong>Framing for Administration:</strong> This is a retention risk issue, not a grievance. Replacing a senior faculty member costs 1.5-2× annual salary in search, startup, and lost productivity. A $15K investment protects a multi-million dollar institutional investment in faculty development.
+</div>
+
+<h2>Supporting Data Sources</h2>
+<ul style="font-size: 10pt; margin-left: 20px;">
+    <li><strong>Internal:</strong> TN Tech October Budget Personnel FY2023-24</li>
+    <li><strong>External Benchmarks:</strong> CUPA-HR Faculty Salary Survey (Chemistry, CIP 40.05)</li>
+    <li><strong>Peer Institutions:</strong> Middle Tennessee State, Austin Peay, East Tennessee State</li>
+    <li><strong>Methodology References:</strong> UCF Faculty Salary Equity Study (2020), University of Houston Salary Compression Report</li>
+</ul>
+
+<div class="footer">
+    <p>Prepared for Tennessee Tech Faculty Senate | Chemistry Department Salary Equity Working Group</p>
+    <p>Document generated: November 2024 | Data current as of FY2023-24</p>
+</div>
+
+</body>
+</html>
